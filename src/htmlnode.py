@@ -11,9 +11,11 @@ class HTMLNode:
         self.children = children
         self.props = props
     def to_html(self):
+        ## Turns whole node into HTML
         raise NotImplementedError("You need to override to_html!")
     
     def props_to_html(self):
+        ## Turns the properties dict into str that goes into a Tag
         if self.props is None:
             return ""
         #  Goal is to join the attributes with a space, and add one leading space
@@ -35,3 +37,18 @@ class LeafNode(HTMLNode):
     
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.props})"
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+    
+    def to_html(self):
+        if self.tag is None:
+            raise ValueError("Parent node must have a tag.")
+        if self.children is None:
+            raise ValueError("Where the kids at?")
+    ## Need to first build the string that recursion will populate
+        kids_html = ""
+        for kid in self.children:
+            kids_html += kid.to_html()
+        return f"<{self.tag}{self.props_to_html()}>{kids_html}</{self.tag}>"

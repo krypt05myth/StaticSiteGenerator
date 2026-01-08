@@ -1,5 +1,5 @@
 import unittest
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -22,6 +22,7 @@ class TestHTMLNode(unittest.TestCase):
         expected_props = ' href="some.site" target="nothing"'
         self.assertEqual(node.props_to_html(), expected_props)
 
+    ## LEAF NODE TESTS
     def test_leaf_to_html_p(self):
         node = LeafNode("p", "Hello, world!")
         self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
@@ -38,6 +39,31 @@ class TestHTMLNode(unittest.TestCase):
         node = LeafNode("p", None)
         with self.assertRaises(ValueError):
             node.to_html()
+    ## PARENT NODE TESTS
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
+
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>",
+        )
+
+    def test_to_html_no_kids(self):
+        kid = None
+        parent = ParentNode("someTag", []) #empty list is where a 'kid' would be
+        self.assertEqual(parent.to_html(), "<someTag></someTag>")
+
+    def test_to_html_no_tag(self):
+        kid = LeafNode("someTag", "someValue")
+        parent = ParentNode(None, [kid])
+        with self.assertRaises(ValueError):
+            parent.to_html()
 
 if __name__ == "__main__":
     unittest.main()
