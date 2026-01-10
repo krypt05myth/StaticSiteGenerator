@@ -10,6 +10,7 @@ class HTMLNode:
         self.value = value
         self.children = children
         self.props = props
+
     def to_html(self):
         ## Turns whole node into HTML
         raise NotImplementedError("You need to override to_html!")
@@ -20,7 +21,7 @@ class HTMLNode:
             return ""
         #  Goal is to join the attributes with a space, and add one leading space
         return "".join([f' {k}="{v}"' for k, v in self.props.items()])
-    
+
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
 
