@@ -1,6 +1,8 @@
 import unittest
 from block_markdown import (
     markdown_to_blocks,
+    BlockType,
+    block_to_block_type,
 )
 
 class TestBlockMarkdown(unittest.TestCase):
@@ -48,6 +50,23 @@ This is the same paragraph on a new line
             blocks,
             ["This is a block with leading/trailing spaces", "Another block here"]
         )
+    def test_block_to_block_types(self):
+        self.assertEqual(block_to_block_type("# heading"), BlockType.HEADING)
+        self.assertEqual(block_to_block_type("### heading"), BlockType.HEADING)
+        self.assertEqual(block_to_block_type("```\ncode\n```"), BlockType.CODE)
+        self.assertEqual(block_to_block_type("> quote\n> more quote"), BlockType.QUOTE)
+        self.assertEqual(block_to_block_type("* list\n* item"), BlockType.U_L)
+        self.assertEqual(block_to_block_type("1. first\n2. second"), BlockType.O_L)
+        self.assertEqual(block_to_block_type("just a paragraph"), BlockType.PARAGRAPH)
 
+    def test_ordered_list_fail(self):
+        # Testing the sequence break logic you just implemented
+        self.assertEqual(block_to_block_type("1. first\n3. third"), BlockType.PARAGRAPH)
+
+    def test_heading_fail(self):
+        # Testing the regex fullmatch logic
+        self.assertEqual(block_to_block_type("####### too many"), BlockType.PARAGRAPH)
+        self.assertEqual(block_to_block_type("#no_space"), BlockType.PARAGRAPH)
+        
 if __name__ == "__main__":
     unittest.main()
