@@ -13,7 +13,7 @@ def markdown_to_blocks(md: str):
     md = md.split("\n\n")
     # md_block = md_block.strip()
     md_filtered = [block.strip() for block in md if block.strip() != ""]
-    return md_filtered
+    return md_filtered # from a 'block' of md to a list of str from the 'block' str
 
 def block_to_block_type(md: str):
     # HEADING
@@ -29,7 +29,7 @@ def block_to_block_type(md: str):
         if all(line.startswith(">") for line in lines): ## <- GENERATOR EXPR SYNTAX!!!
             return BlockType.QUOTE
     # UNORDERED_LIST
-    if md.startswith(("* ", "- ")): ## LOGICAL OR TUPLE IS TOTALLY FINE TO PASS IN!!
+    if md.startswith(("* ", "- ")): ## A "LOGICAL OR TUPLE" IS TOTALLY FINE TO PASS IN!!
         lines = md.splitlines()
         if all(line.startswith(("* ", "- ")) for line in lines):
             return BlockType.U_L

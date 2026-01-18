@@ -50,6 +50,7 @@ This is the same paragraph on a new line
             blocks,
             ["This is a block with leading/trailing spaces", "Another block here"]
         )
+        
     def test_block_to_block_types(self):
         self.assertEqual(block_to_block_type("# heading"), BlockType.HEADING)
         self.assertEqual(block_to_block_type("### heading"), BlockType.HEADING)
@@ -67,6 +68,6 @@ This is the same paragraph on a new line
         # Testing the regex fullmatch logic
         self.assertEqual(block_to_block_type("####### too many"), BlockType.PARAGRAPH)
         self.assertEqual(block_to_block_type("#no_space"), BlockType.PARAGRAPH)
-        
+
 if __name__ == "__main__":
     unittest.main()
