@@ -18,7 +18,7 @@ def markdown_to_blocks(md: str):
 def block_to_block_type(md: str):
     # HEADING
     if md.startswith("#"):
-        if re.fullmatch(r"((?<!#)#{1,6}\s).*$", md):
+        if re.match(r"(?<!#)#{1,6}\s", md):
             return BlockType.HEADING
     # CODE
     if md.startswith("```") and md.endswith("```"):
