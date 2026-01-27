@@ -5,6 +5,8 @@ import clean_copy_set as ccs
 def main():
     # First, let's nuke the public folder so it is a fresh canvas
     ccs.reset_dir()
+    ccs.recursed_copy_path_checker_helper()
+    
 
     # Create a new TextNode object with dummy values
     node = TextNode(
