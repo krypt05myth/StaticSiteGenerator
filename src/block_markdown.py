@@ -44,6 +44,15 @@ def block_to_block_type(md: str):
     # PARAGRAPH -- DEFAULT
     return BlockType.PARAGRAPH
 
+def extract_title(md):
+    blocks = markdown_to_blocks(md)
+    for block in blocks:
+        block_stripped = block.strip() # Want to catch the stray leading space, leniency allows only one fat-finger leading space! 
+        # print(f"DEBUG: Checking block: '{block_stripped}' \nType: {block_to_block_type(block_stripped)} \n")
+        if block_to_block_type(block_stripped) == BlockType.HEADING:
+            if block_stripped.startswith("# "):
+                return block_stripped.removeprefix("# ").strip()
+    raise Exception("There is no H1 header.")
 
 ## FOR INTERNAL-TO-FILE TESTING
 # if __name__ == "__main__":
