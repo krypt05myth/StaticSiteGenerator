@@ -47,7 +47,7 @@ def block_to_block_type(md: str):
 def extract_title(md):
     blocks = markdown_to_blocks(md)
     for block in blocks:
-        block_stripped = block.strip() # Want to catch the stray leading space, leniency allows only one fat-finger leading space! 
+        block_stripped = block.strip() # Want to catch the stray leading space, my leniency allows only one fat-finger leading space! 
         # print(f"DEBUG: Checking block: '{block_stripped}' \nType: {block_to_block_type(block_stripped)} \n")
         if block_to_block_type(block_stripped) == BlockType.HEADING:
             if block_stripped.startswith("# "):
