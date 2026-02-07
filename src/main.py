@@ -13,7 +13,7 @@ def main():
     ccs.reset_dir() ##nuke, remake clean
     ccs.recursed_copy_path_checker_helper() ##recursive copy static -> public
     ## Then, let's gen the page from MD source using Site Generation Schema to inject into template.html; write to public/index.html
-    gp.generate_page("content/index.md","template.html","public/index.html") 
+    gp.generate_pages_recursive("content","template.html","public") 
     
 ## Boilerplate to ensure main() only runs if the script is executed directly
 if __name__ == "__main__":
