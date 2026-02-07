@@ -3,7 +3,6 @@ import sys
 import shutil
 """
     SITE ASSET PIPELINE: STATIC TO PUBLIC MIRRORING
-    Rule Name: "Static Asset Management Schema", Date Added: 2025-11-25.
     This module manages the fresh-start build process by nuking the 'public' 
     canvas and recursively mirroring the 'static' source with strict path 
     security boundaries to prevent accidental filesystem leakage.
@@ -11,12 +10,12 @@ import shutil
 ## With statically set filepath parameters, build path, delete path, remake path 
 def reset_dir():#working_dir: str, dir: str):
     base_dir = "/home/knix/Coding/Boot.dev/StaticSiteGenerator/"
-    dir = "public"
+    dir = "docs" # was "public"
     base_path = os.path.abspath(base_dir)
     full_path = os.path.abspath(os.path.join(base_dir, dir))
-    # Security Barrier: Only allow deletion if the target is within our project and specifically named 'public'
-    if not full_path.startswith(base_path) or "public" not in full_path:
-        return f"ERROR: {dir} is not 'public/' and not in {base_path}. Cannot delete outside the designated full path."
+    # Security Barrier: Only allow deletion if the target is within our project and specifically named 'docs' but was coded to be 'public'
+    if not full_path.startswith(base_path) or "docs" not in full_path:
+        return f"ERROR: {dir} is not 'docs/' and not in {base_path}. Cannot delete outside the designated full path."
     # The Nuke: Includes utility to guarantee a zero-state rebuild
     if os.path.exists(full_path):
         print(f"Beginning cleanup of {full_path}, before rebuilding it afresh .....")
@@ -29,11 +28,11 @@ def recursed_copy_path_checker_helper():
     PATH VALIDATION LAYER
     Primary security boundary for the recursive worker. 
     Verifies that paths exist within the base directory and 
-    adhere to the 'static' to 'public' mapping schema [cite: 2025-11-30].
+    adhere to the 'static' to 'docs' (formerly'public') mapping schema.
     """
     base_dir = "/home/knix/Coding/Boot.dev/StaticSiteGenerator/"
     source_dir = "static"
-    target_dir = "public"
+    target_dir = "docs"
     base_path = os.path.abspath(base_dir)
     source_path = os.path.abspath(os.path.join(base_dir, source_dir))
     target_path = os.path.abspath(os.path.join(base_dir, target_dir))
@@ -42,9 +41,9 @@ def recursed_copy_path_checker_helper():
         not (source_path.startswith(base_path)
         or target_path.startswith(base_path)) 
         or "static" not in source_path
-        or "public" not in target_path
+        or "docs" not in target_path
     ):
-        return f"ERROR: {source_dir} not 'static/' or {target_dir} not 'public', or either not in {base_path}."
+        return f"ERROR: {source_dir} not 'static/' or {target_dir} not 'docs/', or either not in {base_path}."
     # Handshake: Transition to the recursive worker
     _recursed_copy(source_path, target_path)
 

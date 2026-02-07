@@ -6,7 +6,7 @@ SITE GENERATION SCHEMA: RECURSIVE ORCHESTRATOR
 Orchestrates the conversion of entire directory trees from Markdown to HTML 
 while preserving folder hierarchies and injecting template metadata.
 """
-def generate_page(source_path, template_path, target_path):
+def generate_page(source_path, template_path, target_path, base_url_path):
     print(f"Generating page from {source_path} to {target_path} using {template_path}")
     with open(file=source_path, mode="r") as source, open(file=template_path, mode="r") as template:
         source = source.read()
@@ -15,7 +15,9 @@ def generate_page(source_path, template_path, target_path):
         html = markdown_to_html_node(source).to_html()
         title = extract_title(source)
         # Systematic placeholder replacement
-        templ_fixed = template.replace("{{ Title }}",title).replace("{{ Content }}", html)
+        templ_fixed = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+        # Adjusting root-relative links for GH pages
+        templ_fixed = templ_fixed.replace('href="/', f'href="{base_url_path}').replace('src="/', f'src="{base_url_path}')
         # 1. Isolate the directory from the full file path for pre-write validation
         target_dir = os.path.dirname(target_path)
         # 2. Create all missing levels in one go with safety: 
@@ -25,7 +27,7 @@ def generate_page(source_path, template_path, target_path):
         with open(file=target_path,mode="w") as target:
             target.write(templ_fixed)
 
-def generate_pages_recursive(source_dir, template_path, target_dir):
+def generate_pages_recursive(source_dir, template_path, target_dir, base_url_path):
     """
     PATH VALIDATION LAYER
     Ensures source/target mapping adheres to project security boundaries.
@@ -40,13 +42,13 @@ def generate_pages_recursive(source_dir, template_path, target_dir):
         not (source_path.startswith(base_path)
         or target_path.startswith(base_path)) 
         or "content" not in source_path
-        or "public" not in target_path
+        or "docs" not in target_path
     ):
-        return f"ERROR: {source_dir} not 'content' or {target_dir} not 'public', or either not in {base_path}."
+        return f"ERROR: {source_dir} not 'content' or {target_dir} not 'docs', or either not in {base_path}."
     # Handshake: Transition to the recursive worker
-    _recursed_copy(source_path, template_path, target_path)
+    _recursed_copy(source_path, template_path, target_path, base_url_path)
 
-def _recursed_copy(curr_src, template_path, curr_tgt):
+def _recursed_copy(curr_src, template_path, curr_tgt, base_url_path):
     """
     RECURSIVE CONVERTER
     Traverses the content tree, converting .md files to .html mirrors.
@@ -64,6 +66,6 @@ def _recursed_copy(curr_src, template_path, curr_tgt):
         if os.path.isfile(new_src) and new_src.endswith(".md"):
             # Extension Swap: .md files must land as .html !!
             tgt_as_html = new_tgt.replace(".md",".html")
-            generate_page(new_src, template_path, tgt_as_html)
+            generate_page(new_src, template_path, tgt_as_html, base_url_path)
         elif os.path.isdir(new_src):
-            _recursed_copy(new_src, template_path, new_tgt) 
+            _recursed_copy(new_src, template_path, new_tgt, base_url_path) 
