@@ -28,3 +28,10 @@ def main():
 ## Boilerplate to ensure main() only runs if the script is executed directly
 if __name__ == "__main__":
     main()
+
+'''
+NOTE:
+- This project lives at https://github.com/krypt05myth/StaticSiteGenerator
+- GitHub Pages serves docs/ at: https://krypt05myth.github.io/StaticSiteGenerator/
+- So for GH we use base_url_path = "/StaticSiteGenerator/"
+'''
